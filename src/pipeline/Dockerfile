@@ -1,5 +1,5 @@
 # 1. Imagem base minimalista do Python oficial
-FROM python:3.10-slim
+FROM python:3.12-slim
 
 # 2. Define variáveis de ambiente para garantir que o Python não trave em containers
 # PYTHONDONTWRITEBYTECODE: Evita que o Python escreva arquivos .pyc no container
@@ -31,6 +31,8 @@ COPY src/modelos/ /app/src/modelos/
 
 # 8. Define a variável de ambiente do Python Path para que os imports relativos funcionem perfeitamente
 ENV PYTHONPATH="/app"
+# Variável de ambiente para ocultar logs de CUDA/GPU do TensorFlow (Oculta os logs 3 a 7)
+ENV TF_CPP_MIN_LOG_LEVEL=2
 
 # 9. Comando que o Cloud Run Jobs vai executar ao ser despertado
 CMD ["python", "src/pipeline/run_pipeline.py"]
