@@ -1,0 +1,10 @@
+# Versão do Python utilizada: 3.12.13
+scikit-learn==1.6.1
+joblib==1.5.3
+pandas==2.2.2
+numpy==2.0.2
+tensorflow==2.20.0
+db-dtypes==1.7.0
+google-cloud-bigquery==3.41.0
+google-cloud-storage==3.11.0
+pandas-gbq==0.35.0
