@@ -29,7 +29,7 @@ RUN pip install --no-cache-dir --upgrade pip && \
 COPY src/pipeline/ /app/src/pipeline/
 COPY src/modelos/ /app/src/modelos/
 
-# 8. Define a variável de ambiente do Python Path para que os imports relativos funcionem perfeitamente
+# 8. Define a variável de ambiente do Python Path para que os imports relativos funcionem corretamente
 ENV PYTHONPATH="/app"
 # Variável de ambiente para ocultar logs de CUDA/GPU do TensorFlow (Oculta os logs 3 a 7)
 ENV TF_CPP_MIN_LOG_LEVEL=2

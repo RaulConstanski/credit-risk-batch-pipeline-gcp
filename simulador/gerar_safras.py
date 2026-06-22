@@ -1,3 +1,7 @@
+# Simulador de sistema legado de um banco, usando a base de dados da aprendizagem, a ideia
+# é criar lote a lote para injetar na nuvem e testar os modelos.
+# O target é removido para simular a realidade de produção, onde não temos o futuro (inadimplência) conhecido. O foco é apenas injetar os dados brutos, sem as colunas de decisão, 
+# para que o pipeline de Machine Learning possa processar e gerar os scores de crédito.
 import os
 import pandas as pd
 from google.cloud import bigquery

@@ -1,9 +1,13 @@
+# Pipeline Batch de Risco de Crédito - Google Cloud Platform
+# Faz o download dos dados da safra alvo, gera as predições de inadimplência
+# usando os modelos SVM e LSTM, aplica a regra de maior ou menos que 0.5 (0,1), e salva na tabela histórica de predições do BigQuery.
 import os
 import sys
 from datetime import datetime, timezone
 import pandas as pd
 import numpy as np
 import joblib
+import tensorflow as tf
 from google.cloud import bigquery
 
 
@@ -19,7 +23,7 @@ print(f"Iniciando Pipeline Batch de Risco de Crédito")
 print(f"Projeto: {PROJECT_ID} | Safra de Processamento: {SAFRA_ALVO}")
 print(f"Modelo definido como Decisor Oficial: {MODELO_PRODUCAO}\n")
 
-# Auxiliar: Função customizada de Reshape para a sua LSTM do TCC
+# Auxiliar: Função customizada de Reshape para o LSTM do TCC
 def reshape_para_lstm_array(X_array):
     """
     Transforma a matriz plana de 29 colunas do ColumnTransformer 
@@ -51,7 +55,7 @@ query = f"""
     SELECT * FROM `{PROJECT_ID}.{DATASET_NAME}.{TABLE_INPUT}`
     WHERE safra = '{SAFRA_ALVO}'
 """
-print("🔍 Buscando dados brutos no BigQuery...")
+print("Buscando dados brutos no BigQuery...")
 df_bruto = client.query(query).to_dataframe()
 
 if df_bruto.empty:
@@ -63,7 +67,7 @@ print(f"📊 {len(df_bruto)} clientes encontrados para processamento.")
 # 4. Separação de Metadados e Ordenação Estrita das Features
 df_metadados = df_bruto[['id_cliente', 'safra']].copy()
 
-# A ordem precisa casar 100% com a ordem das colunas que gerou o seu venv/ColumnTransformer
+# A ordem precisa casar 100% com a ordem das colunas que gerou o ColumnTransformer
 features_ordem_treino = [
     'LIMIT_BAL', 'SEX', 'EDUCATION', 'MARRIAGE', 'AGE',
     'PAY_1', 'PAY_2', 'PAY_3', 'PAY_4', 'PAY_5', 'PAY_6',
@@ -81,8 +85,8 @@ modelo_svm = joblib.load(f"{CAMINHO_MODELOS}/melhor_modelo_svm.pkl")
 
 modelo_lstm = None
 try:
-    from tensorflow.keras.models import load_model
-    modelo_lstm = load_model(f"{CAMINHO_MODELOS}/melhor_modelo_lstm.keras")
+    #from tensorflow.keras.models import load_model
+    modelo_lstm = tf.keras.models.load_model(f"{CAMINHO_MODELOS}/melhor_modelo_lstm.keras")
     print("LSTM (Modelo Shadow) carregado com sucesso.")
 except Exception as e:
     print(f"Aviso ao carregar o LSTM: {e}. O pipeline seguirá apenas com o SVM.")
