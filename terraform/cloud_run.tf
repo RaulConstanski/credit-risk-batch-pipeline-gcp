@@ -57,10 +57,10 @@ resource "google_cloud_run_v2_job" "pipeline_job" {
         }
         env {
           name  = "MODELO_PRODUCAO"
-          value = "SVM" # <-- O Switch de Produção está aqui! Se quiser mudar para o LSTM no futuro, basta alterar aqui.
+          value = "SVM" # <-- O Switch de Produção está aqui! É possível mudar para o LSTM no futuro.
         }
 
-        # Configuração de recursos básicos (Lembrando que o TensorFlow exige um pouquinho mais de RAM)
+        # Configuração de recursos básicos (O TensorFlow exige um pouquinho mais de RAM)
         resources {
           limits = {
             cpu    = "2"
